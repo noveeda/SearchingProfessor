@@ -15,7 +15,7 @@ public class Parser{
 
     private String url = "https://www.kunsan.ac.kr/index.kunsan?menuCd=DOM_000000107003000000&sso=ok";
 
-    public void SearchTerm(String searchTerm){
+    public ArrayList<HashMap> SearchTerm(String searchTerm){
         try{
             Document doc = Jsoup.connect(url)
                     .data("collection", "office")
@@ -24,14 +24,16 @@ public class Parser{
                     .data("currentPage", "1")
                     .post();
 
-            ParseData(doc);
+            ArrayList<HashMap> list = ParseData(doc);
+            return list;
         }catch (Exception e){
             e.printStackTrace();
             System.out.println("검색어가 잘못되었거나, 페이지 수를 초과하였습니다. 페이지 수를 다시 입력해주세요.");
         }
-
+        return null;
     }
-    public void SearchTerm(String searchTerm, int page){
+
+    public ArrayList<HashMap> SearchTerm(String searchTerm, int page){
         try{
             Document doc = Jsoup.connect(url)
                     .data("collection", "office")
@@ -40,15 +42,17 @@ public class Parser{
                     .data("currentPage", Integer.toString(page))
                     .post();
 
-            ParseData(doc);
+            ArrayList<HashMap> list = ParseData(doc);
+            return list;
         }
         catch(Exception e){
             e.printStackTrace();
             System.out.println("검색어가 잘못되었거나, 페이지 수를 초과하였습니다. 페이지 수를 다시 입력해주세요.");
         }
+        return null;
     }
 
-    private void ParseData(Document doc) {
+    private ArrayList<HashMap> ParseData(Document doc) {
         Elements elements = doc.select("div.cscroll_768 tbody > tr");
 
         ArrayList<HashMap> list = new ArrayList<HashMap>();
@@ -66,8 +70,9 @@ public class Parser{
             list.add(map);
         }
 
-        for(int i = 0; i < list.size(); i++){
+        return list;
+        /*for(int i = 0; i < list.size(); i++){
             System.out.println(list.get(i));
-        }
+        }*/
     }
 }
